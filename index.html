@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Louisa Blend</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,500&family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --cream: #FFF8EC;
+            --paper: #FFFDF8;
+            --coffee: #4A2E22;
+            --coffee-deep: #2E1B13;
+            --sunflower: #F2AE1F;
+            --sunflower-dark: #C4820D;
+            --tulip: #E5546E;
+            --tulip-dark: #B8324A;
+            --sage: #7C9473;
+            --sage-dark: #4F6647;
+            --line: rgba(74, 46, 34, 0.18);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: var(--cream);
+            color: var(--coffee);
+            font-family: 'Quicksand', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .bg-texture {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(242, 174, 31, 0.06) 0, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(229, 84, 110, 0.06) 0, transparent 40%);
+        }
+
+        .wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 40px;
+        }
+
+        .eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--sage-dark);
+            margin-bottom: 18px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        h1.title {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: clamp(42px, 9vw, 74px);
+            line-height: 1.02;
+            margin: 0 0 14px;
+            color: var(--coffee-deep);
+            opacity: 0;
+            animation: fadeUp 0.9s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .title em {
+            font-style: italic;
+            font-weight: 500;
+            color: var(--tulip-dark);
+        }
+
+        .subtitle {
+            font-size: 17px;
+            color: var(--coffee);
+            opacity: 0.75;
+            max-width: 380px;
+            margin: 0 auto 44px;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeUp 0.9s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bouquet-holder {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .scroll-cue {
+            margin-top: 36px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--coffee);
+            opacity: 0.45;
+            letter-spacing: 0.08em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            animation: bob 2s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(6px);
+            }
+        }
+
+        /* DIVIDER */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 0 auto 8px;
+            max-width: 340px;
+            color: var(--sage-dark);
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--line);
+        }
+
+        /* MENU CARD */
+        .menu-section {
+            padding: 70px 0 40px;
+        }
+
+        .menu-card {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 44px 36px;
+            box-shadow: 0 20px 50px -25px rgba(74, 46, 34, 0.35);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .menu-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-kicker {
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--tulip-dark);
+            margin-bottom: 6px;
+        }
+
+        .menu-title {
+            text-align: center;
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: 30px;
+            margin: 0 0 34px;
+            color: var(--coffee-deep);
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 16px;
+            padding: 18px 0;
+            border-bottom: 1px dashed var(--line);
+        }
+
+        .menu-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .menu-item-name {
+            font-family: 'Fraunces', serif;
+            font-size: 19px;
+            font-weight: 600;
+        }
+
+        .menu-item-desc {
+            font-size: 14.5px;
+            color: var(--coffee);
+            opacity: 0.72;
+            margin-top: 5px;
+            line-height: 1.55;
+            max-width: 380px;
+        }
+
+        .menu-item-price {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            color: var(--sage-dark);
+            white-space: nowrap;
+            padding-top: 2px;
+        }
+
+        .menu-note {
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 11.5px;
+            color: var(--coffee);
+            opacity: 0.5;
+            margin-top: 28px;
+            letter-spacing: 0.02em;
+        }
+
+        /* TICKET / CTA */
+        .ticket-section {
+            padding: 30px 0 100px;
+            text-align: center;
+        }
+
+        .ticket {
+            background: var(--coffee-deep);
+            color: var(--cream);
+            border-radius: 18px;
+            padding: 46px 32px 40px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .ticket.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ticket::before,
+        .ticket::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: var(--cream);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ticket::before {
+            left: -13px;
+        }
+
+        .ticket::after {
+            right: -13px;
+        }
+
+        .ticket-eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--sunflower);
+            margin-bottom: 14px;
+        }
+
+        .ticket h2 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: 28px;
+            margin: 0 0 14px;
+            line-height: 1.25;
+        }
+
+        .ticket p {
+            font-size: 15px;
+            opacity: 0.78;
+            max-width: 360px;
+            margin: 0 auto 30px;
+            line-height: 1.65;
+        }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--tulip);
+            color: #fff;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            padding: 16px 32px;
+            border-radius: 100px;
+            text-decoration: none;
+            box-shadow: 0 12px 24px -10px rgba(229, 84, 110, 0.55);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px) scale(1.03);
+            background: var(--tulip-dark);
+            box-shadow: 0 16px 28px -10px rgba(229, 84, 110, 0.65);
+        }
+
+        .cta-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .ticket-fine {
+            margin-top: 22px;
+            font-family: 'Space Mono', monospace;
+            font-size: 10.5px;
+            opacity: 0.4;
+            letter-spacing: 0.05em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0 0 60px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--coffee);
+            opacity: 0.4;
+            letter-spacing: 0.03em;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-texture"></div>
+
+    <div class="wrap">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="eyebrow">now open &mdash; for one night only</div>
+            <h1 class="title">The<br><em>Louisa</em> Blend</h1>
+            <p class="subtitle">A café that exists for exactly one order, brewed by someone who's a little nervous and a
+                lot sure about you.</p>
+
+            <div class="bouquet-holder">
+                <svg viewBox="0 0 300 340" width="100%" role="img"
+                    aria-label="An illustration of tulips and a sunflower blooming from a coffee cup">
+                    <!-- steam -->
+                    <path id="steam1" d="M120 70 C 110 55, 130 45, 120 30" fill="none" stroke="var(--coffee)"
+                        stroke-width="2.5" stroke-linecap="round" opacity="0.25" />
+                    <path id="steam2" d="M150 65 C 140 50, 160 40, 150 25" fill="none" stroke="var(--coffee)"
+                        stroke-width="2.5" stroke-linecap="round" opacity="0.25" />
+
+                    <!-- stems -->
+                    <path class="stem" d="M150 210 C 145 170, 100 140, 95 95" fill="none" stroke="var(--sage)"
+                        stroke-width="4" stroke-linecap="round" />
+                    <path class="stem" d="M150 210 C 152 165, 150 120, 150 70" fill="none" stroke="var(--sage)"
+                        stroke-width="4" stroke-linecap="round" />
+                    <path class="stem" d="M150 210 C 158 170, 200 145, 208 100" fill="none" stroke="var(--sage)"
+                        stroke-width="4" stroke-linecap="round" />
+
+                    <!-- leaves -->
+                    <path class="leaf" d="M118 165 C 100 160, 92 145, 98 132 C 112 138, 120 150, 118 165 Z"
+                        fill="var(--sage)" />
+                    <path class="leaf" d="M182 170 C 200 163, 206 148, 198 136 C 186 144, 180 156, 182 170 Z"
+                        fill="var(--sage)" />
+
+                    <!-- tulip left -->
+                    <g class="bloom" transform="translate(95,95)">
+                        <path d="M0 0 C -14 -8, -16 -30, 0 -38 C 16 -30, 14 -8, 0 0 Z" fill="var(--tulip)" />
+                        <path d="M0 -2 C -8 -8, -9 -24, 0 -30 C 4 -20, 4 -10, 0 -2 Z" fill="var(--tulip-dark)"
+                            opacity="0.55" />
+                    </g>
+
+                    <!-- tulip right -->
+                    <g class="bloom" transform="translate(208,100)">
+                        <path d="M0 0 C -14 -8, -16 -30, 0 -38 C 16 -30, 14 -8, 0 0 Z" fill="var(--tulip)" />
+                        <path d="M0 -2 C -8 -8, -9 -24, 0 -30 C 4 -20, 4 -10, 0 -2 Z" fill="var(--tulip-dark)"
+                            opacity="0.55" />
+                    </g>
+
+                    <!-- sunflower center top -->
+                    <g class="bloom" transform="translate(150,70)">
+                        <g fill="var(--sunflower)">
+                            <ellipse rx="10" ry="18" transform="rotate(0)" />
+                            <ellipse rx="10" ry="18" transform="rotate(45)" />
+                            <ellipse rx="10" ry="18" transform="rotate(90)" />
+                            <ellipse rx="10" ry="18" transform="rotate(135)" />
+                            <ellipse rx="10" ry="18" transform="rotate(180)" />
+                            <ellipse rx="10" ry="18" transform="rotate(225)" />
+                            <ellipse rx="10" ry="18" transform="rotate(270)" />
+                            <ellipse rx="10" ry="18" transform="rotate(315)" />
+                        </g>
+                        <circle r="11" fill="var(--sunflower-dark)" />
+                    </g>
+
+                    <!-- cup -->
+                    <g transform="translate(150,240)">
+                        <path d="M-70 -10 L70 -10 L58 55 C 58 68, -58 68, -58 55 Z" fill="var(--coffee)" />
+                        <ellipse cx="0" cy="-10" rx="70" ry="12" fill="var(--coffee-deep)" />
+                        <ellipse cx="0" cy="-10" rx="58" ry="8" fill="#3a2419" />
+                        <path d="M60 5 C 90 5, 90 40, 60 40" fill="none" stroke="var(--coffee)" stroke-width="9"
+                            stroke-linecap="round" />
+                    </g>
+                    <!-- saucer -->
+                    <ellipse cx="150" cy="312" rx="95" ry="11" fill="var(--coffee)" opacity="0.85" />
+                </svg>
+            </div>
+
+            <div class="scroll-cue">
+                <span>see today's special</span>
+                <span>&darr;</span>
+            </div>
+        </section>
+
+        <!-- MENU -->
+        <section class="menu-section">
+            <div class="menu-card" id="menuCard">
+                <div class="menu-kicker">today's only special</div>
+                <h2 class="menu-title">Dinner, table for two</h2>
+
+                <div class="menu-item">
+                    <div>
+                        <div class="menu-item-name">The main course</div>
+                        <div class="menu-item-desc">Dinner, next week &mdash; just the two of us. You pick the night,
+                            I'll pick you up.</div>
+                    </div>
+                    <div class="menu-item-price">no charge</div>
+                </div>
+
+                <div class="menu-item">
+                    <div>
+                        <div class="menu-item-name">A side of flowers</div>
+                        <div class="menu-item-desc">One bouquet, tulips and sunflowers, because that's the whole theme
+                            of this website.</div>
+                    </div>
+                    <div class="menu-item-price">included</div>
+                </div>
+
+                <div class="menu-item">
+                    <div>
+                        <div class="menu-item-name">Dessert</div>
+                        <div class="menu-item-desc">Whatever makes you laugh the hardest. I'm still working on the
+                            recipe.</div>
+                    </div>
+                    <div class="menu-item-price">tbd</div>
+                </div>
+
+                <div class="menu-note">no substitutions &middot; no rain checks &middot; just you</div>
+            </div>
+        </section>
+
+        <!-- CTA TICKET -->
+        <section class="ticket-section">
+            <div class="ticket" id="ticket">
+                <div class="ticket-eyebrow">order ticket</div>
+                <h2>So, Louisa &mdash;<br>will you come to dinner?</h2>
+                <p>Tap below and just tell me what night and time work for you. I'll handle the reservations, the
+                    flowers, and the nerves.</p>
+                <a class="cta-btn" href="PASTE_YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" rel="noopener">
+                    Reserve our table &rarr;
+                </a>
+                <div class="ticket-fine">table held under "Louisa" &middot; est. this week</div>
+            </div>
+        </section>
+
+        <footer>brewed with too much coffee and a little bit of nerves</footer>
+
+    </div>
+
+    <script>
+        // reveal cards on scroll
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('.menu-card, .ticket').forEach(el => io.observe(el));
+
+        // draw-in stems + bloom pop on load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.stem').forEach((stem, i) => {
+                const len = stem.getTotalLength();
+                stem.style.strokeDasharray = len;
+                stem.style.strokeDashoffset = len;
+                stem.style.transition = `stroke-dashoffset 1.1s ease ${0.15 * i + 0.2}s`;
+                requestAnimationFrame(() => requestAnimationFrame(() => { stem.style.strokeDashoffset = '0'; }));
+            });
+
+            const blooms = document.querySelectorAll('.bloom');
+            blooms.forEach((b, i) => {
+                b.style.transformOrigin = 'center';
+                b.style.opacity = '0';
+                b.style.transform += ' scale(0.3)';
+                b.style.transition = `opacity 0.5s ease ${0.9 + i * 0.18}s, transform 0.6s cubic-bezier(.34,1.56,.64,1) ${0.9 + i * 0.18}s`;
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    b.style.opacity = '1';
+                    b.style.transform = b.style.transform.replace('scale(0.3)', 'scale(1)');
+                }));
+            });
+
+            const leaves = document.querySelectorAll('.leaf');
+            leaves.forEach((l, i) => {
+                l.style.opacity = '0';
+                l.style.transition = `opacity 0.6s ease ${0.6 + i * 0.15}s`;
+                requestAnimationFrame(() => requestAnimationFrame(() => { l.style.opacity = '1'; }));
+            });
+        });
+
+        // gentle looping steam
+        [document.getElementById('steam1'), document.getElementById('steam2')].forEach((s, i) => {
+            if (!s) return;
+            s.animate(
+                [{ transform: 'translateY(0)', opacity: 0.25 }, { transform: 'translateY(-8px)', opacity: 0.05 }, { transform: 'translateY(0)', opacity: 0.25 }],
+                { duration: 3200 + i * 400, iterations: Infinity, easing: 'ease-in-out' }
+            );
+        });
+    </script>
+
+</body>
+
+</html>
