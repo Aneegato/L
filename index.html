@@ -185,9 +185,83 @@
   @media (prefers-reduced-motion: reduce){
     *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
   }
+
+  /* GATE */
+  #gate{
+    position:fixed; inset:0; z-index:50;
+    background:var(--ink-deep);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:24px;
+    transition:opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #gate.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+  #gate .gate-eyebrow{
+    font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--amber); margin-bottom:16px;
+  }
+  #gate h2{
+    font-family:'Anton', sans-serif; font-weight:400; text-transform:uppercase;
+    font-size:clamp(28px,7vw,44px); margin:0 0 36px; max-width:420px; line-height:1.15;
+  }
+  .gate-buttons{
+    position:relative;
+    display:flex; gap:18px; align-items:center; justify-content:center;
+    width:100%; max-width:420px; height:120px;
+  }
+  .gate-btn{
+    font-family:'Poppins', sans-serif; font-weight:700; font-size:16px;
+    padding:15px 36px; border-radius:100px; border:none; cursor:pointer;
+    transition:transform 0.18s ease;
+  }
+  #yesBtn{
+    background:var(--tulip); color:#fff;
+    box-shadow:0 12px 24px -10px rgba(229,84,110,0.55);
+  }
+  #yesBtn:hover{ transform:scale(1.06); background:var(--tulip-dark); }
+  #noBtn{
+    background:transparent; color:var(--paper); opacity:0.7;
+    border:1px solid var(--line);
+    position:absolute;
+  }
+  .gate-msg{
+    margin-top:26px; font-family:'Space Mono', monospace; font-size:12px;
+    color:var(--amber); opacity:0; min-height:16px; transition:opacity 0.3s ease;
+  }
+  .gate-msg.show{ opacity:1; }
+
+  /* POLAROID */
+  .polaroid-wrap{ display:flex; justify-content:center; margin-bottom:32px; }
+  .polaroid{
+    background:#fff; padding:14px 14px 46px; border-radius:3px;
+    box-shadow:0 20px 40px -18px rgba(0,0,0,0.55);
+    transform:rotate(-4deg);
+    max-width:230px;
+    position:relative;
+  }
+  .polaroid img{ display:block; width:100%; border-radius:1px; }
+  .polaroid-caption{
+    position:absolute; bottom:12px; left:0; right:0; text-align:center;
+    font-family:'Caveat', cursive; font-size:17px; color:#2a2a2a; font-weight:700;
+  }
+  .tape{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%) rotate(-2deg);
+    width:70px; height:26px; background:rgba(242,174,31,0.55);
+    box-shadow:0 2px 4px rgba(0,0,0,0.15);
+  }
 </style>
 </head>
 <body>
+
+<!-- GATE -->
+<div id="gate">
+  <div class="gate-eyebrow">before the show starts</div>
+  <h2>Do you want to see<br>something I made for you?</h2>
+  <div class="gate-buttons" id="gateButtons">
+    <button class="gate-btn" id="yesBtn">Yes</button>
+    <button class="gate-btn" id="noBtn">No</button>
+  </div>
+  <div class="gate-msg" id="gateMsg">you can only say yes tonight ✨</div>
+</div>
 
 <div class="bg-glow"></div>
 
@@ -295,12 +369,22 @@
         <div class="track-name">You, saying yes</div>
         <div class="track-runtime">the whole point</div>
       </div>
+
+      <div class="setlist-note">no opener &middot; no encore needed &middot; just you</div>
     </div>
   </section>
 
   <!-- CTA TICKET -->
   <section class="ticket-section">
     <div class="ticket" id="ticket">
+      <div class="polaroid-wrap">
+        <div class="polaroid">
+          <div class="tape"></div>
+          <img src="us.jpg" alt="Us being ridiculous in sheet masks">
+          <div class="polaroid-caption">us, mid skincare, still cute</div>
+        </div>
+      </div>
+
       <div class="ticket-eyebrow">admit one</div>
       <h2>Will you come to<br>the show with me?</h2>
       <p>Tap below and tell me what night and time work for you. I'll take care of everything else.</p>
@@ -316,6 +400,41 @@
 </div>
 
 <script>
+  // GATE LOGIC
+  const gate = document.getElementById('gate');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const gateButtons = document.getElementById('gateButtons');
+  const gateMsg = document.getElementById('gateMsg');
+  let dodgeCount = 0;
+
+  function dodgeNo(){
+    const boxW = gateButtons.clientWidth;
+    const boxH = gateButtons.clientHeight;
+    const btnW = noBtn.offsetWidth;
+    const btnH = noBtn.offsetHeight;
+    const maxX = Math.max(0, boxW - btnW) / 2;
+    const maxY = Math.max(0, boxH - btnH) / 2;
+    const x = (Math.random() * 2 - 1) * maxX;
+    const y = (Math.random() * 2 - 1) * maxY;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    dodgeCount++;
+    gateMsg.classList.add('show');
+    if (dodgeCount > 4) gateMsg.textContent = "nice try — yes is the only option 💛";
+  }
+
+  noBtn.addEventListener('mouseenter', dodgeNo);
+  noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dodgeNo(); }, { passive:false });
+  noBtn.addEventListener('click', (e) => { e.preventDefault(); dodgeNo(); });
+  noBtn.addEventListener('focus', dodgeNo);
+
+  yesBtn.addEventListener('click', () => {
+    gate.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  });
+
+  document.body.style.overflow = 'hidden';
+
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.2 });
